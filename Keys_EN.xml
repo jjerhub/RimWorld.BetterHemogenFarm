@@ -7,4 +7,6 @@
   <BHF_Hemo>Hemogen</BHF_Hemo>
   <BHF_Ovum>Ovum</BHF_Ovum>
   <BHF_Err_DupeSett>Unable to assign settings more than once.</BHF_Err_DupeSett>
+  <BHF_Sett_Limit_Enable>Limit {0} bill</BHF_Sett_Limit_Enable>
+  <BHF_Sett_Limit_Val>{0} limit</BHF_Sett_Limit_Val>
 </LanguageData>

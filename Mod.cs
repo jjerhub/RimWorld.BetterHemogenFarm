@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LudeonTK;
+using System;
 using System.Linq;
 using UnityEngine;
 using Verse;
@@ -47,14 +48,31 @@ namespace jjerhub.BetterHemogenFarmForked
         {
             var ovum = "BHF_Ovum".Translate();
             var hemo = "BHF_Hemo".Translate();
-            Func<string,string> titleTemplate = (f) => $"{"BHF_Extract".Translate()} {f}";
-            Func<string, string> descTemplate = (f) => "BHF_Sett_Gzm_Temp".Translate(f);//Whether or not to display the {0} extraction gizmo. The gizmo allows you to toggle the extraction bill to be placed on the pawn automatically as appropriate.
+            var subRect = inRect;
+            string hLimitRef = settings.hemogenLimit.ToString();
+            string oLimitRef = settings.ovumLimit.ToString();
+            Func<string,string> gizmoTitleTemplate = (f) => $"{"BHF_Extract".Translate()} {f}";
+            Func<string, string> gizmoDescTemplate = (f) => "BHF_Sett_Gzm_Temp".Translate(f);//Whether or not to display the {0} extraction gizmo. The gizmo allows you to toggle the extraction bill to be placed on the pawn automatically as appropriate.
+            Func<string, string> limitTitleTemplate = (f) => $"{"BHF_Sett_Limit_Enable".Translate(f)}";
+            Func<string, string> limitValueTitleTemplate = (f) => $"{"BHF_Sett_Limit_Val".Translate(f)} ";
             Listing_Standard listingStandard = new Listing_Standard();
+
+            subRect.height = 20f;
+
             listingStandard.Begin(inRect);
-            //listingStandard.CheckboxLabeled("Extract Hemogen", ref settings.enableFarmHemogen, "Whether or not to display the hemogen extraction gizmo. The gizmo allows you to toggle the extraction bill to be placed on the pawn automatically as appropriate.");
-            //listingStandard.CheckboxLabeled("Extract Ovum", ref settings.enableFarmOvum, "Whether or not to display the ovum extraction gizmo. The gizmo allows you to toggle the extraction bill to be placed on the pawn automatically as appropriate.");
-            listingStandard.CheckboxLabeled(titleTemplate(hemo), ref settings.enableFarmHemogen, descTemplate(hemo.ToLower()));
-            listingStandard.CheckboxLabeled(titleTemplate(ovum), ref settings.enableFarmOvum, descTemplate(ovum.ToLower()));
+            listingStandard.CheckboxLabeled(gizmoTitleTemplate(hemo), ref settings.enableFarmHemogen, gizmoDescTemplate(hemo.ToLower()));
+            listingStandard.CheckboxLabeled(gizmoTitleTemplate(ovum), ref settings.enableFarmOvum, gizmoDescTemplate(ovum.ToLower()));
+
+            listingStandard.GapLine();
+            listingStandard.CheckboxLabeled(limitTitleTemplate(hemo), ref settings.enableHemogenLimit);
+            listingStandard.Indent();
+            listingStandard.TextFieldNumericLabeled(limitValueTitleTemplate(hemo), ref settings.hemogenLimit, ref hLimitRef, 1, ushort.MaxValue);
+            listingStandard.Outdent();
+            listingStandard.GapLine();
+            listingStandard.CheckboxLabeled(limitTitleTemplate(ovum), ref settings.enableOvumLimit);
+            listingStandard.Indent();
+            listingStandard.TextFieldNumericLabeled(limitValueTitleTemplate(ovum), ref settings.ovumLimit, ref oLimitRef, 1, ushort.MaxValue);
+
             listingStandard.End();
             base.DoSettingsWindowContents(inRect);
         }

@@ -2,17 +2,17 @@
 
   <PropertyGroup>
     <TargetFramework>net472</TargetFramework>
-    <Copyright>jjerhub 2025</Copyright>
-    <AssemblyVersion>1.0.4</AssemblyVersion>
-    <FileVersion>1.0.4</FileVersion>
+    <Copyright>jjerhub 2026</Copyright>
+    <AssemblyVersion>1.0.5</AssemblyVersion>
+    <FileVersion>1.0.5</FileVersion>
   </PropertyGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="xcopy /Y &quot;$(TargetPath)&quot; &quot;C:\Dev\Mods\RimWorld\BetterHemogenFarmForked\Deployable\Assemblies\&quot;&#xD;&#xA;xcopy /S /Y &quot;C:\Dev\Mods\RimWorld\BetterHemogenFarmForked\Deployable\&quot; &quot;C:\RW\Mods\BetterHemogenFarmForked\&quot;" />
+    <Exec Command="xcopy /Y &quot;$(TargetPath)&quot; &quot;C:\Dev\Mods\RimWorld\BetterHemogenFarmForked\Deployable\Assemblies\&quot;&#xD;&#xA;xcopy /Y &quot;$(ProjectDir)&quot;\Keys_EN.xml &quot;C:\Dev\Mods\Rimworld\BetterHemogenFarmForked\Deployable\Languages\English\Keyed\&quot;&#xD;&#xA;xcopy /S /Y &quot;C:\Dev\Mods\RimWorld\BetterHemogenFarmForked\Deployable\&quot; &quot;C:\RW\Mods\BetterHemogenFarmForked\&quot;" />
   </Target>
 
   <ItemGroup>
-    <PackageReference Include="Krafs.Rimworld.Ref" Version="1.6.4535" />
+    <PackageReference Include="Krafs.Rimworld.Ref" Version="1.6.4633" />
   </ItemGroup>
 
 </Project>

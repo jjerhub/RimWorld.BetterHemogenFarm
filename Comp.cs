@@ -28,6 +28,8 @@ namespace jjerhub.BetterHemogenFarmForked
         private static readonly string OvumGizmoLabel = gzmLabel("BHF_Ovum".Translate());//"Auto Extract Ovum";
         private RecipeDef xtrOvum = DefDatabase<RecipeDef>.GetNamedSilentFail("ExtractOvum");
         private RecipeDef xtrHemo = RecipeDefOf.ExtractHemogenPack;
+        private Type hemoPackDef = ThingDefOf.HemogenPack.thingClass;
+        private Type ovumDef = ThingDefOf.HumanOvum.thingClass;
         private bool shouldFarmHemogen = false;
         private bool shouldFarmOvum = false;
         private FarmCriteriaSet billCriteria;
@@ -78,16 +80,33 @@ namespace jjerhub.BetterHemogenFarmForked
             IsFarmableTarget(Pawn, bill, allowRef)
             && bill.AvailableOnNow(Pawn); //checks pawn age, sex, fertility, etc...except apparently not if male has ovum??
 
+        private static Func<ThingDef, uint> FindByType = (t) => FindByTypeS(t, true);
+
+        private static Func<ThingDef, bool, uint> FindByTypeS = (t, inStorage) =>
+            {
+                var thingsRaw = typeof(ListerThings)
+                    .GetMethod("GetThingsOfType", Type.EmptyTypes)
+                    .MakeGenericMethod(t.thingClass)
+                    .Invoke(Find.CurrentMap.listerThings, new object[] { });
+                var things = (IEnumerable<Thing>)thingsRaw;
+
+                var result = things?.Where(tng => tng.def.defName == t.defName && (tng.IsInValidStorage() || !inStorage)).Sum(tng => tng.stackCount) ?? 0;
+
+                return (uint)result;
+            };
+
         private bool IsReadyForHemoFarm =>
             settings.enableFarmHemogen
             && IsFarmableNow(Pawn, xtrHemo, billCriteria)
             && (!Pawn.BillStack.Bills?.Any((Bill x) => x.recipe == xtrHemo) ?? true)
-            && SanguophageUtility.CanSafelyBeQueuedForHemogenExtraction(Pawn);
+            && SanguophageUtility.CanSafelyBeQueuedForHemogenExtraction(Pawn)
+            && (!settings.enableHemogenLimit || FindByType(ThingDefOf.HemogenPack) < settings.hemogenLimit);
         private bool IsReadyForOvumFarm =>
             settings.enableFarmOvum
             && IsFarmableNow(Pawn, xtrOvum, billCriteria)
             && (!Pawn.BillStack.Bills?.Any((Bill x) => x.recipe == xtrOvum) ?? true)
-            && (!Pawn.health?.hediffSet?.HasHediff(HediffDefOf.OvumExtracted) ?? true);
+            && (!Pawn.health?.hediffSet?.HasHediff(HediffDefOf.OvumExtracted) ?? true)
+            && (!settings.enableOvumLimit || FindByType(ThingDefOf.HumanOvum) < settings.ovumLimit);
 
         private Action<Pawn, RecipeDef, bool> CheckAndQueueExtract = (Pawn, bill, readyNow) => { if (readyNow && Pawn.Spawned) HealthCardUtility.CreateSurgeryBill(Pawn, bill, null); };
 
