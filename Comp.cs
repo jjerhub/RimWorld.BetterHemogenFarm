@@ -33,9 +33,20 @@ namespace jjerhub.BetterHemogenFarmForked
         private bool shouldFarmHemogen = false;
         private bool shouldFarmOvum = false;
         private FarmCriteriaSet billCriteria;
-        private BetterHemoFarmForkedSettings settings => Persistence.Settings;
+        private static BetterHemoFarmForkedSettings settings => Persistence.Settings;
         private const ulong pollInterval = TimeSpan.TicksPerSecond / 2;
         private ulong lastTick = (ulong)DateTime.Now.Ticks + pollInterval;
+        private static readonly ulong invCacheInterval;
+        private static ulong lastHemoCache;
+        private static ulong lastOvumCache;
+        private static Dictionary<ThingDef, uint> cachedInventory = new Dictionary<ThingDef, uint>();
+
+        static BetterHemoFarmForkedComp()
+        {
+            invCacheInterval = (ulong)TimeSpan.TicksPerSecond * settings.inventoryPollRate;
+            lastHemoCache = (ulong)DateTime.Now.Ticks + invCacheInterval;
+            lastOvumCache = (ulong)DateTime.Now.Ticks + invCacheInterval;
+        }
 
         public BetterHemoFarmForkedComp() : base()
         {
@@ -80,19 +91,26 @@ namespace jjerhub.BetterHemogenFarmForked
             IsFarmableTarget(Pawn, bill, allowRef)
             && bill.AvailableOnNow(Pawn); //checks pawn age, sex, fertility, etc...except apparently not if male has ovum??
 
-        private static Func<ThingDef, uint> FindByType = (t) => FindByTypeS(t, true);
+        private static Func<ThingDef, ulong, uint> FindByType = (thingy, cacheTime) => FindByTypeS(thingy, cacheTime, true);
 
-        private static Func<ThingDef, bool, uint> FindByTypeS = (t, inStorage) =>
+        private static Func<ThingDef, ulong, bool, uint> FindByTypeS = (thingy, cacheTime, inStorage) =>
             {
-                var thingsRaw = typeof(ListerThings)
-                    .GetMethod("GetThingsOfType", Type.EmptyTypes)
-                    .MakeGenericMethod(t.thingClass)
-                    .Invoke(Find.CurrentMap.listerThings, new object[] { });
-                var things = (IEnumerable<Thing>)thingsRaw;
+                if (cacheTime <= invCacheInterval && cachedInventory.TryGetValue(thingy, out uint cachedCount))
+                {
+                    return cachedCount;
+                }
+                else
+                {
+                    var thingsRaw = typeof(ListerThings)
+                        .GetMethod("GetThingsOfType", Type.EmptyTypes)
+                        .MakeGenericMethod(thingy.thingClass)
+                        .Invoke(Find.CurrentMap.listerThings, new object[] { });
+                    var things = (IEnumerable<Thing>)thingsRaw;
 
-                var result = things?.Where(tng => tng.def.defName == t.defName && (tng.IsInValidStorage() || !inStorage)).Sum(tng => tng.stackCount) ?? 0;
+                    var result = things?.Where(tng => tng.def.defName == thingy.defName && (tng.IsInValidStorage() || !inStorage)).Sum(tng => tng.stackCount) ?? 0;
 
-                return (uint)result;
+                    return (uint)result;
+                }
             };
 
         private bool IsReadyForHemoFarm =>
@@ -100,13 +118,13 @@ namespace jjerhub.BetterHemogenFarmForked
             && IsFarmableNow(Pawn, xtrHemo, billCriteria)
             && (!Pawn.BillStack.Bills?.Any((Bill x) => x.recipe == xtrHemo) ?? true)
             && SanguophageUtility.CanSafelyBeQueuedForHemogenExtraction(Pawn)
-            && (!settings.enableHemogenLimit || FindByType(ThingDefOf.HemogenPack) < settings.hemogenLimit);
+            && (!settings.enableHemogenLimit || FindByType(ThingDefOf.HemogenPack, lastHemoCache) < settings.hemogenLimit);
         private bool IsReadyForOvumFarm =>
             settings.enableFarmOvum
             && IsFarmableNow(Pawn, xtrOvum, billCriteria)
             && (!Pawn.BillStack.Bills?.Any((Bill x) => x.recipe == xtrOvum) ?? true)
             && (!Pawn.health?.hediffSet?.HasHediff(HediffDefOf.OvumExtracted) ?? true)
-            && (!settings.enableOvumLimit || FindByType(ThingDefOf.HumanOvum) < settings.ovumLimit);
+            && (!settings.enableOvumLimit || FindByType(ThingDefOf.HumanOvum, lastOvumCache) < settings.ovumLimit);
 
         private Action<Pawn, RecipeDef, bool> CheckAndQueueExtract = (Pawn, bill, readyNow) => { if (readyNow && Pawn.Spawned) HealthCardUtility.CreateSurgeryBill(Pawn, bill, null); };
 

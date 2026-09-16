@@ -51,9 +51,10 @@ namespace jjerhub.BetterHemogenFarmForked
             var subRect = inRect;
             string hLimitRef = settings.hemogenLimit.ToString();
             string oLimitRef = settings.ovumLimit.ToString();
+            string invCacheIntervalRef = settings.inventoryPollRate.ToString();
             Func<string,string> gizmoTitleTemplate = (f) => $"{"BHF_Extract".Translate()} {f}";
             Func<string, string> gizmoDescTemplate = (f) => "BHF_Sett_Gzm_Temp".Translate(f);//Whether or not to display the {0} extraction gizmo. The gizmo allows you to toggle the extraction bill to be placed on the pawn automatically as appropriate.
-            Func<string, string> limitTitleTemplate = (f) => $"{"BHF_Sett_Limit_Enable".Translate(f)}";
+            Func<string, string> limitTitleTemplate = (f) => "BHF_Sett_Limit_Enable".Translate(f);
             Func<string, string> limitValueTitleTemplate = (f) => $"{"BHF_Sett_Limit_Val".Translate(f)} ";
             Listing_Standard listingStandard = new Listing_Standard();
 
@@ -66,12 +67,15 @@ namespace jjerhub.BetterHemogenFarmForked
             listingStandard.GapLine();
             listingStandard.CheckboxLabeled(limitTitleTemplate(hemo), ref settings.enableHemogenLimit);
             listingStandard.Indent();
-            listingStandard.TextFieldNumericLabeled(limitValueTitleTemplate(hemo), ref settings.hemogenLimit, ref hLimitRef, 1, ushort.MaxValue);
+            listingStandard.TextFieldNumericLabeled(limitValueTitleTemplate(hemo), ref settings.hemogenLimit, ref hLimitRef, min: 1, max: ushort.MaxValue);
             listingStandard.Outdent();
             listingStandard.GapLine();
             listingStandard.CheckboxLabeled(limitTitleTemplate(ovum), ref settings.enableOvumLimit);
             listingStandard.Indent();
-            listingStandard.TextFieldNumericLabeled(limitValueTitleTemplate(ovum), ref settings.ovumLimit, ref oLimitRef, 1, ushort.MaxValue);
+            listingStandard.TextFieldNumericLabeled(limitValueTitleTemplate(ovum), ref settings.ovumLimit, ref oLimitRef, min: 1, max: ushort.MaxValue);
+            listingStandard.Outdent();
+            listingStandard.GapLine();
+            listingStandard.TextFieldNumericLabeled("BHF_Sett_Inv_Cache_Int".Translate(), ref settings.inventoryPollRate, ref invCacheIntervalRef, min: 1, max: ushort.MaxValue);
 
             listingStandard.End();
             base.DoSettingsWindowContents(inRect);
