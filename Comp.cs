@@ -28,8 +28,6 @@ namespace jjerhub.BetterHemogenFarmForked
         private static readonly string OvumGizmoLabel = gzmLabel("BHF_Ovum".Translate());//"Auto Extract Ovum";
         private RecipeDef xtrOvum = DefDatabase<RecipeDef>.GetNamedSilentFail("ExtractOvum");
         private RecipeDef xtrHemo = RecipeDefOf.ExtractHemogenPack;
-        private Type hemoPackDef = ThingDefOf.HemogenPack.thingClass;
-        private Type ovumDef = ThingDefOf.HumanOvum.thingClass;
         private bool shouldFarmHemogen = false;
         private bool shouldFarmOvum = false;
         private FarmCriteriaSet billCriteria;
@@ -43,7 +41,7 @@ namespace jjerhub.BetterHemogenFarmForked
 
         static BetterHemoFarmForkedComp()
         {
-            invCacheInterval = (ulong)TimeSpan.TicksPerSecond * settings.inventoryPollRate;
+            invCacheInterval = (ulong)TimeSpan.TicksPerSecond * (ushort)settings.inventoryPollRate;
             lastHemoCache = (ulong)DateTime.Now.Ticks + invCacheInterval;
             lastOvumCache = (ulong)DateTime.Now.Ticks + invCacheInterval;
         }
