@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="xcopy /Y &quot;$(TargetPath)&quot; &quot;C:\Dev\Mods\RimWorld\BetterHemogenFarmForked\Deployable\Assemblies\&quot;&#xD;&#xA;xcopy /Y &quot;$(ProjectDir)&quot;\Keys_EN.xml &quot;C:\Dev\Mods\Rimworld\BetterHemogenFarmForked\Deployable\Languages\English\Keyed\&quot;&#xD;&#xA;xcopy /S /Y &quot;C:\Dev\Mods\RimWorld\BetterHemogenFarmForked\Deployable\&quot; &quot;C:\RW\Mods\BetterHemogenFarmForked\&quot;" />
+    <Exec Command="xcopy /Y &quot;$(TargetPath)&quot; &quot;C:\Dev\Mods\RimWorld\BetterHemogenFarmForked\Deployable\Common\Assemblies\&quot;&#xD;&#xA;xcopy /S /Y &quot;C:\Dev\Mods\RimWorld\BetterHemogenFarmForked\Deployable\&quot; &quot;C:\RW\Mods\BetterHemogenFarmForked\&quot;" />
   </Target>
 
   <ItemGroup>
