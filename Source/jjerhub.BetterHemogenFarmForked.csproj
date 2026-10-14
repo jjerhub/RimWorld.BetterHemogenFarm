@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+    <Copyright>jjerhub 2026</Copyright>
+    <AssemblyVersion>1.0.6</AssemblyVersion>
+    <FileVersion>1.0.6</FileVersion>
+  </PropertyGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="xcopy /Y &quot;$(TargetPath)&quot; &quot;C:\Dev\Mods\RimWorld\BetterHemogenFarmForked\Deployable\Assemblies\&quot;&#xD;&#xA;xcopy /Y &quot;$(ProjectDir)&quot;\Keys_EN.xml &quot;C:\Dev\Mods\Rimworld\BetterHemogenFarmForked\Deployable\Languages\English\Keyed\&quot;&#xD;&#xA;xcopy /S /Y &quot;C:\Dev\Mods\RimWorld\BetterHemogenFarmForked\Deployable\&quot; &quot;C:\RW\Mods\BetterHemogenFarmForked\&quot;" />
+  </Target>
+
+  <ItemGroup>
+    <Content Include="..\Deployable\About\About.xml" Link="About.xml" />
+    <Content Include="..\Deployable\Common\Languages\English\Keyed\Keys_EN.xml" Link="Keys_EN.xml" />
+    <Content Include="..\Deployable\LoadFolders.xml" Link="LoadFolders.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\.gitignore" Link=".gitignore" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Krafs.Rimworld.Ref" Version="1.6.4633" />
+  </ItemGroup>
+
+</Project>

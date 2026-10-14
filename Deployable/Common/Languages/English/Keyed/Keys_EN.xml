@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<LanguageData>
+  <BHF_GizmoPH>Automatically place the {0} bill on this pawn whenever it can be fulfilled without harming the pawn</BHF_GizmoPH>
+  <BHF_Sett_Gzm_Temp>Whether or not to display the {0} extraction gizmo. The gizmo allows you to toggle the extraction bill to be placed on the pawn automatically as appropriate.</BHF_Sett_Gzm_Temp>
+  <BHF_Extract>Extract</BHF_Extract>
+  <BHF_Auto>Auto</BHF_Auto>
+  <BHF_Hemo>Hemogen</BHF_Hemo>
+  <BHF_Ovum>Ovum</BHF_Ovum>
+  <BHF_Err_DupeSett>Unable to assign settings more than once.</BHF_Err_DupeSett>
+  <BHF_Sett_Limit_Enable>Limit {0} bill</BHF_Sett_Limit_Enable>
+  <BHF_Sett_Limit_Val>{0} limit</BHF_Sett_Limit_Val>
+  <BHF_Sett_Inv_Cache_Int>Inventory cache interval</BHF_Sett_Inv_Cache_Int>
+</LanguageData>

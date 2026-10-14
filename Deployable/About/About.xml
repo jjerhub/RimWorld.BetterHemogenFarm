@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ModMetaData>
+  <name>Better Hemogen Farm (Forked)</name>
+  <author>jjerhub</author>
+  <description>The mod conditionally adds a Gizmo to a Player's Colonists/Tribals, their Slaves, or their Prisoners, which allows you to flag them to automatically extract hemogen or ovum where appropriate.
+
+One important note is that for prisoners the hemogen farm Gizmo is always disabled since the game has native functionality for this as of 1.6.
+
+This is a modified/forked version of pewpewlord420's continuation
+https://steamcommunity.com/sharedfiles/filedetails/?id=3419180734
+Which is an updated version of Maarx's mod:
+https://steamcommunity.com/sharedfiles/filedetails/?id=2967718207.
+I hold no claim to the original concept of this mod, but this version is heavily refactored.
+This version may be taken down by request from any of the previous author(s).
+
+Changes from pewpewlord420's 1.5 version:
+- Compatibility with version 1.6.
+- Removal of rest conditions requirement
+- Resource farm settings carry across maps
+
+--changelog--
+v1.0.6b:
+- added 1.7 flag after some cursory testing
+v1.0.6a:
+- fixed bug introduced in 1.0.6 causing setting error
+v1.0.6:
+- added caching for inventory limits with configurable poll interval for performance tuning
+- new setting translation key "BHF_Sett_Inv_Cache_Int"
+v1.0.5:
+- added farming limits
+- new translation keys "BHF_Sett_Limit_Enable" and "BHF_Sett_Limit_Val"
+v1.0.4:
+- added translation keys
+v1.0.3:
+- apparently my last fix broke a lot of things internally. The mod has been significantly reworked internally again, but the previous features should still remain.  No known issues presently.
+v1.0.2:
+- fixed an issue where pawn farm toggle wasn't persisted with game restart
+v1.0.1:
+- fixed an issue where hemogenic pawns incorrectly showed the hemogen farm toggle
+  </description>
+  <packageId>jjerhub.BetterHemogenFarmForked</packageId>
+  <supportedVersions>
+    <li>1.6</li>
+    <li>1.7</li>
+  </supportedVersions>
+  <modDependencies>
+    <li>
+      <packageId>ludeon.rimworld.biotech</packageId>
+      <displayName>Biotech</displayName>
+    </li>
+    <li>
+      <packageId>brrainz.harmony</packageId>
+      <displayName>Harmony</displayName>
+      <steamWorkshopUrl>steam://url/CommunityFilePage/2009463077</steamWorkshopUrl>
+      <downloadUrl>https://github.com/pardeike/HarmonyRimWorld/releases/latest</downloadUrl>
+    </li>
+  </modDependencies>
+  <loadAfter>
+    <li>brrainz.harmony</li>
+    <li>ludeon.rimworld.biotech</li>
+  </loadAfter>
+  <modVersion>1.0.6b</modVersion>
+</ModMetaData>
